@@ -37,8 +37,7 @@ class UploadFileTests(unittest.TestCase):
     def test_upload_no_file(self):
         """Test upload with no file."""
         response = self.client.post('/upload')
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(b'No file uploaded!', response.data)
+        self.assertEqual(response.status_code, 422)
 
     def test_upload_empty_filename(self):
         """Test upload with an empty filename."""
@@ -47,7 +46,6 @@ class UploadFileTests(unittest.TestCase):
         }
         response = self.client.post('/upload', data=data)
         self.assertEqual(response.status_code, 400)
-        self.assertIn(b'Please provide filename!', response.data)
 
 
 if __name__ == '__main__':

@@ -7,8 +7,10 @@ Made using **Python 3.11** + **Flask**.
 Testing is done using **untitest** module.
 
 ## Important Instructions
+Using Swagger UI:
+- Use: `http://localhost:5000/docs`
 
-Using Postman (recommended) for example:
+Using Postman:
 - Use: `http://localhost:5000/`
 
 ## How to run

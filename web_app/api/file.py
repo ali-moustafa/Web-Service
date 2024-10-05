@@ -1,4 +1,6 @@
-from flask import Blueprint, request, Response, jsonify, abort, current_app
+from flask import request, Response, jsonify, current_app
+from flask_smorest import Blueprint, abort
+from marshmallow import Schema, fields
 import os
 import random
 import xml.etree.ElementTree as ET
@@ -6,7 +8,9 @@ import xml.etree.ElementTree as ET
 
 file_blueprint = Blueprint('file_blueprint', __name__)
 
-# upload_directory = current_app.config['UPLOAD_FOLDER']
+
+class FileNameSchema(Schema):
+    file_name = fields.String(required=True)
 
 
 def file_random_line(file_path):
@@ -18,15 +22,18 @@ def file_random_line(file_path):
 
 @file_blueprint.route('/random_line', methods=['GET'])
 def get_random_line():
+    """
+    Return one random line of a random previously uploaded file
+    """
     upload_directory = current_app.config['UPLOAD_FOLDER']
     files = os.listdir(upload_directory)
     if not files:
-        abort(404, 'No files uploaded yet!')
+        abort(404, message='No files uploaded yet!')
 
     file_name = random.choice(files)
     file_path = os.path.join(upload_directory, file_name)
     if not os.path.isfile(file_path):
-        abort(404, f"file {file_name} does not exist!")
+        abort(404, message=f"file {file_name} does not exist!")
 
     random_line = file_random_line(file_path)
     most_common_letter = max(set(random_line), key=random_line.count)
@@ -48,18 +55,19 @@ def get_random_line():
 
 
 @file_blueprint.route('/random_line_backwards', methods=['GET'])
-def get_random_line_backwards():
+@file_blueprint.arguments(FileNameSchema, location='query')
+def get_random_line_backwards(arg):
+    """
+    Return one random line backwards
+    """
     upload_directory = current_app.config['UPLOAD_FOLDER']
     files = os.listdir(upload_directory)
     if not files:
-        abort(404, 'No uploaded files found!')
+        abort(404, message='No uploaded files found!')
 
-    file_name = request.args.get('file_name')
-    if not file_name:
-        abort(400, f"'file_name' parameter is missing!")
-
+    file_name = arg['file_name']
     if file_name not in files:
-        abort(404, f"File '{file_name}' not found")
+        abort(404, message=f"File '{file_name}' not found")
 
     file_path = os.path.join(upload_directory, file_name)
     random_line = file_random_line(file_path)
@@ -70,6 +78,9 @@ def get_random_line_backwards():
 
 @file_blueprint.route('/hundred_longest_lines')
 def hundred_longest_lines_in_all_files():
+    """
+    Return the 100 longest lines of all files uploaded
+    """
     upload_directory = current_app.config['UPLOAD_FOLDER']
     files = os.listdir(upload_directory)
     all_lines = []
@@ -85,19 +96,20 @@ def hundred_longest_lines_in_all_files():
 
 
 @file_blueprint.route('/twenty_longest_lines')
-def get_twenty_longest_lines_one_file():
+@file_blueprint.arguments(FileNameSchema, location='query')
+def get_twenty_longest_lines_one_file(arg):
+    """
+    Return the 20 longest lines of an uploaded file
+    """
     upload_directory = current_app.config['UPLOAD_FOLDER']
     files = os.listdir(upload_directory)
 
     if not files:
-        abort(404, 'No uploaded files found!')
+        abort(404, message='No uploaded files found!')
 
-    file_name = request.args.get('file_name')
-    if not file_name:
-        abort(400, f"'file_name' parameter is missing!")
-
+    file_name = arg['file_name']
     if file_name not in files:
-        abort(404, f"File '{file_name}' not found")
+        abort(404, message=f"File '{file_name}' not found")
 
     with open(os.path.join(upload_directory, file_name), 'r') as file:
         lines = file.readlines()
