@@ -16,7 +16,7 @@ class FileNameSchema(Schema):
 def file_random_line(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()
-        random_line = random.choice(lines).strip()
+        random_line = random.choice(lines).strip() if lines else ''
         return random_line
 
 
@@ -36,7 +36,9 @@ def get_random_line():
         abort(404, message=f"file {file_name} does not exist!")
 
     random_line = file_random_line(file_path)
-    most_common_letter = max(set(random_line), key=random_line.count)
+    most_common_letter = ''
+    if random_line:
+        most_common_letter = max(set(random_line), key=random_line.count)
 
     if 'application/json' in request.accept_mimetypes:
         return jsonify({
