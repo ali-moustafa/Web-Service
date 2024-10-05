@@ -4,7 +4,7 @@
 
 Made using **Python 3.11** + **Flask**. 
 
-Testing is done using **untitest** module.
+Testing is done using **unittest** module.
 
 ## Important Instructions
 Using Swagger UI:
