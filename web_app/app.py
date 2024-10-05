@@ -16,6 +16,9 @@ def create_app():
     app.register_blueprint(upload_blueprint, name="upload_file", url_prefix=api_url)
     app.register_blueprint(file_blueprint, name="process_file", url_prefix=api_url)
 
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+
     app.run(debug=True)
 
 

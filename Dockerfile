@@ -1,5 +1,7 @@
 FROM python:3.11-alpine
 
+RUN python -m pip install --upgrade pip
+
 # Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

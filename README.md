@@ -15,6 +15,8 @@ Using Postman (recommended) for example:
 
 ## Prerequisites
 
+python 3.11 installed
+
 \[Optional\] Install virtual environment:
 
 ```bash
@@ -38,7 +40,7 @@ Install dependencies:
 $ pip install -r requirements.txt
 ```
 
-run app from cli:
+run app from CLI:
 ```bash
 $ cd <path_to_root_directory>
 $ python web_app/app.py
@@ -50,10 +52,10 @@ It is also possible to run the app using docker:
 
 Build the Docker image:
 ```bash
-$ docker build -t web-app -f Dockerfile .
+$ docker build -t web-service -f Dockerfile .
 ```
 
 Run the Docker container:
 ```bash
-$ docker run --rm -i -p 5000:5000 web-app
+$ docker run --rm -i -p 5000:5000 web-service
 ```
