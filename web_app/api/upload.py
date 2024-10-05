@@ -23,5 +23,6 @@ def upload_file(arg):
         abort(400, message='Please provide filename!')
 
     filename = secure_filename(file.filename)
+    os.makedirs(current_app.config['UPLOAD_FOLDER'], exist_ok=True)
     file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
     return jsonify(message=f"File '{filename}' uploaded successfully"), 200
